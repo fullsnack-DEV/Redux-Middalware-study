@@ -8,17 +8,35 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useFetchApi from "../Hooks/useFetchApi";
+import { useDispatch, useSelector } from "react-redux";
+import { SetProduct } from "../Redux/Actions/ProductActions";
+import axios from "axios";
 
 export default function HomeScreen() {
-  const { data, loading, status } = useFetchApi("products");
+  //getting the Products from store
 
-  console.log(data);
+  const [data, Setdata] = useState();
+
+  const dispatch = useDispatch();
+
+  const fetchProducts = async () => {
+    const response = await axios.get("https://fakestoreapi.com/products");
+
+    //Setdata(response.data);
+    dispatch(SetProduct(response.data));
+  };
+
+  const products = useSelector((state) => state.allproducts.products);
+
+  console.log(products, "==");
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const RenderItem = ({ item, index }) => {
-    console.log(item.id, "rm func");
-
     return (
       <View style={styles.itemcontainer} key={index}>
         <Image
@@ -55,7 +73,7 @@ export default function HomeScreen() {
       </View>
       <View style={{ alignSelf: "center" }}>
         <FlatList
-          data={data}
+          data={products}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => {
             return <RenderItem item={item} index={index} />;
