@@ -8,17 +8,22 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import React, { useEffect } from "react";
-import useFetchApi from "../Hooks/useFetchApi";
+import React, { useEffect, useState } from "react";
+
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts, SetProduct } from "../Redux/Actions/ProductActions";
 
 export default function HomeScreen() {
-  const { data, loading, status } = useFetchApi("products");
+  const dispatch = useDispatch();
 
-  console.log(data);
+  const products = useSelector((state) => state.allproducts.products);
+
+  useEffect(() => {
+    //Calling fetch product async function
+    dispatch(fetchProducts());
+  }, []);
 
   const RenderItem = ({ item, index }) => {
-    console.log(item.id, "rm func");
-
     return (
       <View style={styles.itemcontainer} key={index}>
         <Image
@@ -55,7 +60,7 @@ export default function HomeScreen() {
       </View>
       <View style={{ alignSelf: "center" }}>
         <FlatList
-          data={data}
+          data={products}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => {
             return <RenderItem item={item} index={index} />;
