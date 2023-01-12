@@ -9,31 +9,18 @@ import {
   FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import useFetchApi from "../Hooks/useFetchApi";
+
 import { useDispatch, useSelector } from "react-redux";
-import { SetProduct } from "../Redux/Actions/ProductActions";
-import axios from "axios";
+import { fetchProducts, SetProduct } from "../Redux/Actions/ProductActions";
 
 export default function HomeScreen() {
-  //getting the Products from store
-
-  const [data, Setdata] = useState();
-
   const dispatch = useDispatch();
-
-  const fetchProducts = async () => {
-    const response = await axios.get("https://fakestoreapi.com/products");
-
-    //Setdata(response.data);
-    dispatch(SetProduct(response.data));
-  };
 
   const products = useSelector((state) => state.allproducts.products);
 
-  console.log(products, "==");
-
   useEffect(() => {
-    fetchProducts();
+    //Calling fetch product async function
+    dispatch(fetchProducts());
   }, []);
 
   const RenderItem = ({ item, index }) => {
