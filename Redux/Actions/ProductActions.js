@@ -9,7 +9,7 @@ export const fetchProducts = () => {
     const response = await API.getAllProducts("products");
 
     console.log(response);
-
+    //Automatically dispatch the menthod
     dispatch({ type: ActionTypes.FETCH_PRODUCTS, payload: response.data });
   };
 };
